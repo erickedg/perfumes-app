@@ -11,7 +11,6 @@ const emptyForm = {
   price: '',
   in_stock: true,
   image_url: '',
-  fragrance_type: 'amaderado',  // ← agrega esto
 }
 
 export default function Admin() {
@@ -78,7 +77,6 @@ export default function Admin() {
         name: form.name.trim(),
         description: form.description.trim(),
         price: parseFloat(form.price),
-        fragrance_type: form.fragrance_type,
         in_stock: form.in_stock,
         image_url,
       }
@@ -195,20 +193,6 @@ export default function Admin() {
                       className={styles.input} placeholder="1200.00" required
                     />
                   </div>
-                  <div className={styles.field}>
-                  <label className={styles.label}>Tipo de fragancia</label>
-                  <select name="fragrance_type" value={form.fragrance_type}
-                    onChange={handleField} className={styles.input}>
-                    <option value="amaderado">Amaderado</option>
-                    <option value="floral">Floral</option>
-                    <option value="citrico">Cítrico</option>
-                    <option value="oriental">Oriental</option>
-                    <option value="dulce">Dulce</option>
-                    <option value="fresco">Fresco</option>
-                    <option value="arabe">Árabe</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
 
                   <div className={styles.field}>
                     <label className={styles.label}>Estado</label>
@@ -287,7 +271,6 @@ export default function Admin() {
               <div className={styles.tableHead}>
                 <span>Producto</span>
                 <span>Precio</span>
-                
                 <span>Estado</span>
                 <span>Acciones</span>
               </div>

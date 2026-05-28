@@ -1,40 +1,43 @@
 .card {
   cursor: pointer;
+  animation: reveal 0.5s var(--ease-expo) both;
 }
 
 .imageWrap {
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   overflow: hidden;
   position: relative;
+  background: var(--bg-muted);
 }
 
 .badgeWrap {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 10px;
   z-index: 10;
 }
 
 .badge {
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  letter-spacing: 0.1em;
 }
 
 .inStock {
-  background: var(--bg-card);
-  color: var(--ink);
+  background: var(--green-bg);
+  color: #5cba7d;
+  border: 1px solid rgba(45,107,66,0.4);
 }
 
 .outStock {
-  background: var(--ink);
-  color: var(--bg-card);
+  background: var(--red-stock-bg);
+  color: #e07070;
+  border: 1px solid rgba(139,32,32,0.4);
 }
 
 .image {
@@ -42,8 +45,9 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.7s var(--ease-expo);
+  filter: brightness(0.95);
 }
-.card:hover .image { transform: scale(1.05); }
+.card:hover .image { transform: scale(1.05); filter: brightness(1); }
 
 .placeholder {
   width: 100%;
@@ -53,30 +57,38 @@
   justify-content: center;
 }
 
+.placeholderImg {
+  width: 40%;
+  opacity: 0.08;
+  filter: invert(1);
+}
+
 .info {
+  padding: 0 2px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 12px 14px;
+  gap: 8px;
 }
 
 .infoLeft {}
 
 .name {
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  margin-bottom: 4px;
-  color: var(--ink);
+  margin-bottom: 3px;
+  color: var(--white);
   line-height: 1.2;
 }
 
+@media (min-width: 768px) { .name { font-size: 0.95rem; } }
+
 .notes {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink-soft);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -86,9 +98,12 @@
 
 .price {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
   padding-top: 2px;
   flex-shrink: 0;
+  color: var(--gold);
 }
+
+@media (min-width: 768px) { .price { font-size: 12px; } }

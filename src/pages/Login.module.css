@@ -4,67 +4,71 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--mint);
+  background: var(--bg);
+  background-image: radial-gradient(ellipse at 50% 20%, rgba(194,53,69,0.08) 0%, transparent 60%);
 }
 
 .card {
   width: 100%;
-  max-width: 420px;
-  background: var(--bg-card);
-  border-radius: calc(var(--radius) * 1.5);
-  padding: 52px 44px;
-  box-shadow: 0 20px 60px rgba(18,18,18,0.1);
+  max-width: 400px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-md);
+  border-radius: 12px;
+  padding: 48px 36px;
   position: relative;
   animation: reveal 0.7s var(--ease-expo) both;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--red), transparent);
+  border-radius: 12px 12px 0 0;
 }
 
 .back {
   position: absolute;
-  top: 20px;
-  left: 22px;
+  top: 18px; left: 20px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-soft);
   transition: color var(--tr);
 }
-.back:hover { color: var(--accent); }
+.back:hover { color: var(--red); }
 
-.header { text-align: center; margin-bottom: 36px; }
+.header { text-align: center; margin-bottom: 32px; }
 
-.logoWrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-}
+.logoWrap { display: flex; justify-content: center; margin-bottom: 14px; }
 
 .logoImg {
-  width: 80px;
-  height: 80px;
+  width: 104px;
+  height: 104px;
   object-fit: contain;
+  filter: invert(28%) sepia(60%) saturate(800%) hue-rotate(320deg);
   animation: float 4s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
 .title {
   font-family: var(--font-display);
-  font-size: 2.2rem;
+  font-size: 2rem;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--white);
   margin-bottom: 6px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
 }
 
 .subtitle {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   color: var(--ink-soft);
 }
 
@@ -73,46 +77,50 @@
 
 .label {
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-mid);
 }
 
 .input {
-  background: var(--bg-muted);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 13px 16px;
-  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--border-md);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--white);
   outline: none;
   width: 100%;
   transition: border-color var(--tr), box-shadow var(--tr);
 }
 .input::placeholder { color: var(--ink-faint); }
-.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,50,82,0.1); }
+.input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(194,53,69,0.12); }
 
 .error {
   font-size: 13px;
-  color: var(--red);
+  color: #e07070;
   text-align: center;
   padding: 10px;
-  background: var(--red-bg);
-  border: 1px solid rgba(139,32,32,0.15);
-  border-radius: 10px;
+  background: rgba(139,32,32,0.15);
+  border: 1px solid rgba(139,32,32,0.3);
+  border-radius: 8px;
 }
 
 .btn {
   margin-top: 4px;
-  padding: 15px;
-  background: var(--ink);
-  color: var(--bg);
+  padding: 14px;
+  background: var(--red);
+  color: var(--white);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   border-radius: 999px;
-  transition: background var(--tr), transform 0.25s var(--ease-expo);
+  transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
 }
-.btn:hover:not(:disabled) { background: #1a2e4a; transform: translateY(-1px); }
+.btn:hover:not(:disabled) {
+  background: var(--red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(194,53,69,0.3);
+}
 .btn:disabled { opacity: 0.35; cursor: not-allowed; }

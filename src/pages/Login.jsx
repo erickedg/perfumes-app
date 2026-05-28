@@ -29,10 +29,10 @@ export default function Login() {
         <Link to="/" className={styles.back}>← Volver</Link>
         <div className={styles.header}>
           <div className={styles.logoWrap}>
-            <img src="/logo.png" alt="Tinta & Aroma" className={styles.logoImg} />
+            <img src="/calamar.png" alt="Perfumes Calamar" className={styles.logoImg} />
           </div>
           <h1 className={styles.title}>Admin</h1>
-          <p className={styles.subtitle}>Tinta & Aroma · Panel de gestión</p>
+          <p className={styles.subtitle}>Perfumes Calamar · Panel de gestión</p>
         </div>
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.field}>
