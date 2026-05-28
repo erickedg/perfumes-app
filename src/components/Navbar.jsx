@@ -13,22 +13,19 @@ export default function Navbar() {
   }
 
   return (
-    <header className={styles.header}>
-      <div className={`container ${styles.inner}`}>
+    <header className={styles.nav}>
+      <div className={styles.navInner}>
         <Link to="/" className={styles.brand}>
-          <span className={styles.brandSymbol}>✦</span>
-          <span className={styles.brandName}>Maison de Parfums</span>
+          TINTA & AROMA
         </Link>
-
-        <nav className={styles.nav}>
-          <Link to="/" className={styles.navLink}>Catálogo</Link>
-          {session ? (
+        <nav className={styles.links}>
+          <a href="#catalogo" className={styles.link}>Catálogo</a>
+          <a href="#nosotros" className={styles.link}>Nosotros</a>
+          {session && (
             <>
-              <Link to="/admin" className={styles.navLink}>Admin</Link>
-              <button onClick={handleLogout} className={styles.logoutBtn}>Salir</button>
+              <Link to="/admin" className={styles.link}>Admin</Link>
+              <button onClick={handleLogout} className={styles.link} style={{color:'var(--accent)'}}>Salir</button>
             </>
-          ) : (
-            <Link to="/login" className={styles.navLinkMuted}>Acceso</Link>
           )}
         </nav>
       </div>

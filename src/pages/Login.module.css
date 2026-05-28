@@ -4,114 +4,115 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(201, 168, 76, 0.04) 0%, transparent 60%),
-    var(--bg);
+  background: var(--mint);
 }
 
 .card {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 48px 40px;
+  border-radius: calc(var(--radius) * 1.5);
+  padding: 52px 44px;
+  box-shadow: 0 20px 60px rgba(18,18,18,0.1);
   position: relative;
+  animation: reveal 0.7s var(--ease-expo) both;
 }
 
 .back {
   position: absolute;
   top: 20px;
-  left: 24px;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  transition: color var(--transition);
+  left: 22px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: color var(--tr);
 }
+.back:hover { color: var(--accent); }
 
-.back:hover { color: var(--gold); }
+.header { text-align: center; margin-bottom: 36px; }
 
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.symbol {
-  display: block;
-  font-size: 1.5rem;
-  color: var(--gold);
+.logoWrap {
+  display: flex;
+  justify-content: center;
   margin-bottom: 16px;
+}
+
+.logoImg {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 300;
-  color: var(--gold-pale);
-  margin-bottom: 8px;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
 }
 
 .subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink-soft);
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.form { display: flex; flex-direction: column; gap: 18px; }
+.field { display: flex; flex-direction: column; gap: 7px; }
 
 .label {
   font-size: 11px;
-  letter-spacing: 0.15em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-mid);
 }
 
 .input {
-  background: var(--bg-input);
+  background: var(--bg-muted);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  color: var(--text);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--ink);
   outline: none;
   width: 100%;
-  transition: border-color var(--transition);
+  transition: border-color var(--tr), box-shadow var(--tr);
 }
-
-.input::placeholder { color: var(--text-muted); opacity: 0.5; }
-.input:focus { border-color: var(--border-hi); }
+.input::placeholder { color: var(--ink-faint); }
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,50,82,0.1); }
 
 .error {
   font-size: 13px;
-  color: #e08080;
+  color: var(--red);
   text-align: center;
   padding: 10px;
-  background: rgba(122, 53, 53, 0.15);
-  border: 1px solid rgba(122, 53, 53, 0.3);
-  border-radius: var(--radius);
+  background: var(--red-bg);
+  border: 1px solid rgba(139,32,32,0.15);
+  border-radius: 10px;
 }
 
 .btn {
-  margin-top: 8px;
-  padding: 14px;
-  background: var(--gold);
+  margin-top: 4px;
+  padding: 15px;
+  background: var(--ink);
   color: var(--bg);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  border-radius: var(--radius);
-  transition: opacity var(--transition);
+  border-radius: 999px;
+  transition: background var(--tr), transform 0.25s var(--ease-expo);
 }
-
-.btn:hover:not(:disabled) { opacity: 0.85; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:hover:not(:disabled) { background: #1a2e4a; transform: translateY(-1px); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
