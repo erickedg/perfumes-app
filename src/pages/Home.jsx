@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
+import Pagination from '../components/Pagination'
 import { LogoMercadoPago, LogoVisa, LogoMastercard, LogoAmex, LogoOxxo, LogoBBVA, LogoBanamex, LogoHSBC, LogoSantander } from '../components/PaymentLogos'
 import heroBottle from '../assets/perfume.png'
 import styles from './Home.module.css'
@@ -24,11 +25,17 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('all')
   const [search, setSearch] = useState('')
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [page, setPage] = useState(1)
+
+  const PAGE_SIZE = 10
 
   useEffect(() => {
     supabase.from('products').select('*').order('created_at', { ascending: false })
       .then(({ data }) => { setProducts(data || []); setLoading(false) })
   }, [])
+
+  useEffect(() => { setPage(1) }, [activeFilter, search])
 
   const filtered = products.filter(p => {
     const q = search.toLowerCase()
@@ -36,6 +43,9 @@ export default function Home() {
     const matchFilter = activeFilter === 'all' || p.fragrance_type === activeFilter
     return matchSearch && matchFilter
   })
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   return (
     <div className={styles.page}>
@@ -132,9 +142,18 @@ export default function Home() {
             <div className={styles.state}><p>No se encontraron fragancias</p></div>
           )}
           {!loading && filtered.length > 0 && (
-            <div className={styles.grid}>
-              {filtered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
+            <>
+              <div className={styles.grid}>
+                {paginated.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} onClick={() => setSelectedProduct(p)} />
+                ))}
+              </div>
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onChange={p => { setPage(p); document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' }) }}
+              />
+            </>
           )}
         </div>
       </section>
@@ -164,6 +183,46 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── PRODUCT MODAL ── */}
+      {selectedProduct && (
+        <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setSelectedProduct(null)} aria-label="Cerrar">✕</button>
+
+            {selectedProduct.image_url ? (
+              <div className={styles.modalImageWrap}>
+                <img src={selectedProduct.image_url} alt={selectedProduct.name} className={styles.modalImage} />
+                <div className={styles.modalImageOverlay} />
+              </div>
+            ) : (
+              <div className={styles.modalImageEmpty}>
+                <img src="/calamar.png" alt="" className={styles.modalPlaceholder} />
+              </div>
+            )}
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalMeta}>
+                {selectedProduct.fragrance_type && (
+                  <span className={styles.modalTypeBadge}>{selectedProduct.fragrance_type}</span>
+                )}
+                <span className={`${styles.modalStockBadge} ${selectedProduct.in_stock ? styles.modalInStock : styles.modalOutStock}`}>
+                  {selectedProduct.in_stock ? 'En Stock' : 'Agotado'}
+                </span>
+              </div>
+
+              <h2 className={styles.modalName}>{selectedProduct.name}</h2>
+              <p className={styles.modalPrice}>
+                ${Number(selectedProduct.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+              </p>
+
+              {selectedProduct.description && (
+                <p className={styles.modalDesc}>{selectedProduct.description}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── FOOTER ── */}
       <footer id="nosotros" className={styles.footer}>

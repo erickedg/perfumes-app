@@ -1,9 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import Navbar from '../components/Navbar'
+import Pagination from '../components/Pagination'
 import styles from './Admin.module.css'
 
 const BUCKET = 'perfume-images'
+
+const FRAGRANCE_TYPES = [
+  { label: 'Sin especificar', value: '' },
+  { label: 'Amaderado',       value: 'amaderado' },
+  { label: 'Floral',          value: 'floral' },
+  { label: 'Cítrico',         value: 'citrico' },
+  { label: 'Oriental',        value: 'oriental' },
+  { label: 'Dulce',           value: 'dulce' },
+  { label: 'Fresco',          value: 'fresco' },
+  { label: 'Árabe',           value: 'arabe' },
+]
 
 const emptyForm = {
   name: '',
@@ -11,6 +23,7 @@ const emptyForm = {
   price: '',
   in_stock: true,
   image_url: '',
+  fragrance_type: '',
 }
 
 export default function Admin() {
@@ -23,15 +36,21 @@ export default function Admin() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(null)
   const [msg, setMsg] = useState({ text: '', type: '' })
+  const [adminPage, setAdminPage] = useState(1)
   const fileRef = useRef()
+
+  const PAGE_SIZE = 10
 
   useEffect(() => { fetchProducts() }, [])
 
-  async function fetchProducts() {
+  async function fetchProducts(resetPage = false) {
     setLoading(true)
     const { data, error } = await supabase
       .from('products').select('*').order('created_at', { ascending: false })
-    if (!error) setProducts(data || [])
+    if (!error) {
+      setProducts(data || [])
+      if (resetPage) setAdminPage(1)
+    }
     setLoading(false)
   }
 
@@ -79,6 +98,7 @@ export default function Admin() {
         price: parseFloat(form.price),
         in_stock: form.in_stock,
         image_url,
+        fragrance_type: form.fragrance_type || null,
       }
 
       let error
@@ -92,7 +112,7 @@ export default function Admin() {
 
       notify(editingId ? 'Producto actualizado ✓' : 'Producto agregado ✓')
       resetForm()
-      fetchProducts()
+      fetchProducts(true)
     } catch (err) {
       notify(err.message || 'Error al guardar', 'error')
     } finally {
@@ -108,6 +128,7 @@ export default function Admin() {
       price: product.price,
       in_stock: product.in_stock,
       image_url: product.image_url || '',
+      fragrance_type: product.fragrance_type || '',
     })
     setImageFile(null)
     setImagePreview(product.image_url || '')
@@ -134,7 +155,7 @@ export default function Admin() {
       const { error } = await supabase.from('products').delete().eq('id', product.id)
       if (error) throw error
       notify('Producto eliminado')
-      fetchProducts()
+      fetchProducts(true)
     } catch (err) {
       notify(err.message || 'Error al eliminar', 'error')
     } finally {
@@ -182,6 +203,18 @@ export default function Admin() {
                     placeholder="Notas olfativas, familia aromática, ocasión..."
                     rows={4}
                   />
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Tipo de fragancia</label>
+                  <select
+                    name="fragrance_type" value={form.fragrance_type} onChange={handleField}
+                    className={`${styles.input} ${styles.select}`}
+                  >
+                    {FRAGRANCE_TYPES.map(t => (
+                      <option key={t.value} value={t.value}>{t.label}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className={styles.row}>
@@ -267,45 +300,54 @@ export default function Admin() {
           ) : products.length === 0 ? (
             <p className={styles.stateText}>Sin productos. Agrega el primero arriba.</p>
           ) : (
-            <div className={styles.table}>
-              <div className={styles.tableHead}>
-                <span>Producto</span>
-                <span>Precio</span>
-                <span>Estado</span>
-                <span>Acciones</span>
-              </div>
-              {products.map(p => (
-                <div key={p.id} className={styles.tableRow}>
-                  <div className={styles.productCell}>
-                    {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className={styles.thumb} />
-                    ) : (
-                      <div className={styles.thumbEmpty}>✦</div>
-                    )}
-                    <div>
-                      <p className={styles.productName}>{p.name}</p>
-                      <p className={styles.productDesc}>{p.description?.slice(0, 60)}{p.description?.length > 60 ? '...' : ''}</p>
+            <>
+              <div className={styles.table}>
+                <div className={styles.tableHead}>
+                  <span>Producto</span>
+                  <span>Precio</span>
+                  <span>Estado</span>
+                  <span>Acciones</span>
+                </div>
+                {products.slice((adminPage - 1) * PAGE_SIZE, adminPage * PAGE_SIZE).map(p => (
+                  <div key={p.id} className={styles.tableRow}>
+                    <div className={styles.productCell}>
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={p.name} className={styles.thumb} />
+                      ) : (
+                        <div className={styles.thumbEmpty}>✦</div>
+                      )}
+                      <div>
+                        <p className={styles.productName}>{p.name}</p>
+                        <p className={styles.productDesc}>{p.description?.slice(0, 60)}{p.description?.length > 60 ? '...' : ''}</p>
+                      </div>
+                    </div>
+                    <div className={styles.rowMeta}>
+                      <span className={styles.priceCell}>
+                        ${Number(p.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                      </span>
+                      <span className={`${styles.statusBadge} ${p.in_stock ? styles.inStock : styles.outStock}`}>
+                        {p.in_stock ? 'En stock' : 'Agotado'}
+                      </span>
+                    </div>
+                    <div className={styles.actions}>
+                      <button onClick={() => startEdit(p)} className={styles.editBtn}>Editar</button>
+                      <button
+                        onClick={() => handleDelete(p)}
+                        disabled={deleting === p.id}
+                        className={styles.deleteBtn}
+                      >
+                        {deleting === p.id ? '...' : 'Eliminar'}
+                      </button>
                     </div>
                   </div>
-                  <span className={styles.priceCell}>
-                    ${Number(p.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                  </span>
-                  <span className={`${styles.statusBadge} ${p.in_stock ? styles.inStock : styles.outStock}`}>
-                    {p.in_stock ? 'En stock' : 'Agotado'}
-                  </span>
-                  <div className={styles.actions}>
-                    <button onClick={() => startEdit(p)} className={styles.editBtn}>Editar</button>
-                    <button
-                      onClick={() => handleDelete(p)}
-                      disabled={deleting === p.id}
-                      className={styles.deleteBtn}
-                    >
-                      {deleting === p.id ? '...' : 'Eliminar'}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+              <Pagination
+                page={adminPage}
+                totalPages={Math.ceil(products.length / PAGE_SIZE)}
+                onChange={setAdminPage}
+              />
+            </>
           )}
         </section>
       </main>

@@ -2,12 +2,12 @@ import styles from './ProductCard.module.css'
 
 const BG_COLORS = ['#1a1010', '#100d0d', '#141010', '#0f0c0c', '#181212', '#120e0e']
 
-export default function ProductCard({ product, index = 0 }) {
+export default function ProductCard({ product, index = 0, onClick }) {
   const { name, description, price, image_url, in_stock } = product
   const bg = BG_COLORS[index % BG_COLORS.length]
 
   return (
-    <article className={styles.card} style={{ animationDelay: `${(index + 1) * 80}ms` }}>
+    <article className={styles.card} style={{ animationDelay: `${(index + 1) * 80}ms` }} onClick={onClick}>
       <div className={styles.imageWrap} style={{ background: bg }}>
         <div className={styles.badgeWrap}>
           {in_stock
