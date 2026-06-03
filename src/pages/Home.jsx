@@ -4,6 +4,10 @@ import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import Pagination from '../components/Pagination'
 import { LogoMercadoPago, LogoVisa, LogoMastercard, LogoAmex, LogoOxxo, LogoBBVA, LogoBanamex, LogoHSBC, LogoSantander } from '../components/PaymentLogos'
+import BgAnimateButton from '../components/BgAnimateButton'
+import AnimatedFilterTabs from '../components/AnimatedFilterTabs'
+import BrandLogoCloud from '../components/BrandLogoCloud'
+import SmokeBackground from '../components/SmokeBackground'
 import heroBottle from '../assets/perfume.png'
 import styles from './Home.module.css'
 
@@ -31,7 +35,7 @@ export default function Home() {
   const PAGE_SIZE = 10
 
   useEffect(() => {
-    supabase.from('products').select('*').order('created_at', { ascending: false })
+    supabase.from('products').select('*').order('updated_at', { ascending: false })
       .then(({ data }) => { setProducts(data || []); setLoading(false) })
   }, [])
 
@@ -53,11 +57,13 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <header className={styles.hero}>
+        {/* WebGL smoke background */}
+        <div className={styles.smokeCanvas}>
+          <SmokeBackground smokeColor="#c23545" />
+        </div>
+
         {/* Watermark */}
         <div className={styles.heroWatermark} aria-hidden="true">Perfumes Calamar</div>
-
-        {/* Red glow */}
-        <div className={styles.heroGlow} aria-hidden="true" />
 
         <div className={`container ${styles.heroGrid}`}>
           {/* Left */}
@@ -72,7 +78,7 @@ export default function Home() {
               Chanel, Dior, Dolce & Gabbana, Tom Ford y más.<br />
               Fragancias 100% originales al mejor precio.
             </p>
-            <a href="#catalogo" className={styles.heroBtn}>Ver Catálogo</a>
+            <BgAnimateButton href="#catalogo">Ver Catálogo</BgAnimateButton>
           </div>
 
           {/* Right — bottle card */}
@@ -91,16 +97,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* ── BRANDS TICKER ── */}
-      <div className={styles.ticker}>
-        <div className={styles.tickerTrack}>
-          {[...BRANDS, ...BRANDS].map((b, i) => (
-            <span key={i} className={styles.tickerItem}>
-              {b} <span className={styles.tickerDot}>✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* ── BRANDS LOGO CLOUD ── */}
+      <BrandLogoCloud brands={BRANDS} />
 
       {/* ── STATS BAR ── */}
       
@@ -115,12 +113,6 @@ export default function Home() {
 
           {/* Filters + search */}
           <div className={styles.filtersRow}>
-            {FILTERS.map(f => (
-              <button key={f.value} onClick={() => setActiveFilter(f.value)}
-                className={`${styles.filterBtn} ${activeFilter === f.value ? styles.filterActive : ''}`}>
-                {f.label}
-              </button>
-            ))}
             <div className={styles.searchWrap}>
               <svg className={styles.searchIco} viewBox="0 0 20 20" fill="none">
                 <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
@@ -129,6 +121,11 @@ export default function Home() {
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar..." className={styles.searchInput} />
             </div>
+            <AnimatedFilterTabs
+              filters={FILTERS}
+              activeFilter={activeFilter}
+              onFilterChange={setActiveFilter}
+            />
           </div>
 
           {/* Grid */}

@@ -2,10 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(14,12,12,0.92);
-  backdrop-filter: blur(16px);
+  background: rgba(12, 10, 9, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-bottom: 1px solid var(--border-md);
-  /* needed so the mobile dropdown is positioned relative to the header */
   overflow: visible;
 }
 
@@ -13,15 +13,14 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
-  height: 56px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
 }
-
 @media (min-width: 768px) {
-  .navInner { padding: 0 40px; height: 62px; }
+  .navInner { padding: 0 48px; height: 64px; }
 }
 
 .brand {
@@ -31,8 +30,8 @@
 }
 
 .brandLogo {
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   object-fit: contain;
   filter: brightness(0) saturate(100%) invert(28%) sepia(60%) saturate(800%) hue-rotate(320deg) brightness(90%);
   animation: float 5s ease-in-out infinite;
@@ -42,25 +41,28 @@
   display: flex;
   flex-direction: column;
   line-height: 1;
-  gap: 1px;
+  gap: 3px;
 }
 
 .brandMain {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  letter-spacing: 0.04em;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.02em;
   color: var(--white);
 }
 
-.brandMain span { color: var(--red); }
+.brandMain span { color: var(--red); font-style: normal; }
 
 .brandSub {
-  font-size: 8px;
+  font-family: var(--font-body);
+  font-size: 7.5px;
   font-weight: 500;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 /* --- Hamburger button --- */
@@ -81,16 +83,16 @@
 .barTop, .barMid, .barBot {
   display: block;
   width: 24px;
-  height: 2px;
+  height: 1.5px;
   background: var(--white);
   border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.28s ease, opacity 0.28s ease;
   transform-origin: center;
 }
 
-.barTopOpen  { transform: translateY(7px) rotate(45deg); }
+.barTopOpen  { transform: translateY(6.5px) rotate(45deg); }
 .barMidOpen  { opacity: 0; transform: scaleX(0); }
-.barBotOpen  { transform: translateY(-7px) rotate(-45deg); }
+.barBotOpen  { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* --- Nav links --- */
 .links {
@@ -99,7 +101,9 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: rgba(14,12,12,0.97);
+  background: rgba(12, 10, 9, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-md);
   flex-direction: column;
   align-items: center;
@@ -107,28 +111,27 @@
   padding: 12px 0;
 }
 
-.linksOpen {
-  display: flex;
-}
+.linksOpen { display: flex; }
 
 .link {
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-mid);
   transition: color var(--tr);
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-body);
   padding: 14px 20px;
   width: 100%;
   text-align: center;
+  position: relative;
 }
-.link:hover { color: var(--red); }
+.link:hover { color: var(--white); }
 
-/* --- Desktop: siempre visible, en línea --- */
+/* --- Desktop --- */
 @media (min-width: 768px) {
   .hamburger { display: none; }
 
@@ -139,11 +142,30 @@
     background: none;
     border: none;
     padding: 0;
-    gap: 32px;
+    gap: 36px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .link {
     padding: 0;
     width: auto;
+  }
+
+  .link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.28s var(--ease-expo);
+  }
+  .link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }

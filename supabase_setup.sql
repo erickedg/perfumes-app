@@ -12,8 +12,24 @@ CREATE TABLE IF NOT EXISTS products (
   price       NUMERIC(10, 2) NOT NULL DEFAULT 0,
   image_url   TEXT,
   in_stock    BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at  TIMESTAMPTZ DEFAULT NOW()
+  fragrance_type TEXT,
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Trigger para actualizar updated_at automáticamente en cada UPDATE
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_products_updated_at ON products;
+CREATE TRIGGER trg_products_updated_at
+  BEFORE UPDATE ON products
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 2. ROW LEVEL SECURITY (RLS)
 -- ============================================================

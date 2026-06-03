@@ -46,7 +46,7 @@ export default function Admin() {
   async function fetchProducts(resetPage = false) {
     setLoading(true)
     const { data, error } = await supabase
-      .from('products').select('*').order('created_at', { ascending: false })
+      .from('products').select('*').order('updated_at', { ascending: false })
     if (!error) {
       setProducts(data || [])
       if (resetPage) setAdminPage(1)
@@ -103,7 +103,7 @@ export default function Admin() {
 
       let error
       if (editingId) {
-        ;({ error } = await supabase.from('products').update(payload).eq('id', editingId))
+        ;({ error } = await supabase.from('products').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', editingId))
       } else {
         ;({ error } = await supabase.from('products').insert([payload]))
       }
